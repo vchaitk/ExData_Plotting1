@@ -40,14 +40,22 @@ preProcessAndGetData <- function() {
 drawAndSavePlot <- function(data, filePath="plot4.png") {
     data$DateTime <- paste(data$Date, data$Time, sep = " ")
     png(filename = filePath, width = 480, height = 480, units = "px")
-    par(mfrow=c(2,1))
+    x <- strptime(data$DateTime, "%d/%m/%Y %H:%M:%S")
+    par(mfrow=c(2,2))
+    y <- data$Global_active_power
     plot(x, y, type="l", xlab="", ylab="Global Active Power (kilowatts)")
     plot(x, data$Voltage, type="l", xlab="datetime", ylab="Voltage")
-    
-    x <- strptime(data$DateTime, "%d/%m/%Y %H:%M:%S")
+    # par(mfrow=c(2,2))
     y1 <- data$Sub_metering_1
     y2 <- data$Sub_metering_2
     y3 <- data$Sub_metering_3
+    plot(x, y1, type="l", xlab="", ylab="Energy sub metering")
+    lines(x, y2, col="red")
+    lines(x, y3, col="green")
+    legend("topright", 
+           legend=c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), 
+           lwd=2, col=c("black", "red", "blue"))
+    plot(x, data$Global_reactive_power, type="l", xlab="datetime", ylab="Global_reactive_power")
     dev.off()
 }
 
