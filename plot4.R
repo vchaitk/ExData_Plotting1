@@ -35,19 +35,26 @@ preProcessAndGetData <- function() {
     data
 }
 
-# This function takes the data frame and the filename to store the plot.
-# It draws a PNG histogram of Global Active Power in the data frame and stores
-# it in the given filePath
-drawAndSavePlot <- function(data, filePath="plot1.png") {
+# This function takes the data frame and the filename to store the plot 
+# in the given filePath
+drawAndSavePlot <- function(data, filePath="plot4.png") {
+    data$DateTime <- paste(data$Date, data$Time, sep = " ")
     png(filename = filePath, width = 480, height = 480, units = "px")
-    hist(data$Global_active_power, col="red", main="Global Active Power", xlab="Global Active Power (kilowatts)")
+    par(mfrow=c(2,1))
+    plot(x, y, type="l", xlab="", ylab="Global Active Power (kilowatts)")
+    plot(x, data$Voltage, type="l", xlab="datetime", ylab="Voltage")
+    
+    x <- strptime(data$DateTime, "%d/%m/%Y %H:%M:%S")
+    y1 <- data$Sub_metering_1
+    y2 <- data$Sub_metering_2
+    y3 <- data$Sub_metering_3
     dev.off()
 }
 
 # This is the main function that needs to be called in order to do the complete 
-# data processing as well as plotting the histogram for the Global Active Power 
-# over the period of 2 days (2007-02-01 and 2007-02-02)
+# data processing as well as plotting the graph over the period of 
+# 2 days (2007-02-01 and 2007-02-02)
 init <- function() {
     data <- preProcessAndGetData()
-    drawAndSavePlot(data, "plot1.png")
+    drawAndSavePlot(data, "plot4.png")
 }

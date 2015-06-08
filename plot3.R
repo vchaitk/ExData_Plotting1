@@ -36,18 +36,28 @@ preProcessAndGetData <- function() {
 }
 
 # This function takes the data frame and the filename to store the plot.
-# It draws a PNG histogram of Global Active Power in the data frame and stores
+# It draws a PNG line graph of Sub-Metering readings in the data frame and stores
 # it in the given filePath
-drawAndSavePlot <- function(data, filePath="plot1.png") {
+drawAndSavePlot <- function(data, filePath="plot3.png") {
+    data$DateTime <- paste(data$Date, data$Time, sep = " ")
+    x <- strptime(data$DateTime, "%d/%m/%Y %H:%M:%S")
+    y1 <- data$Sub_metering_1
+    y2 <- data$Sub_metering_2
+    y3 <- data$Sub_metering_3
     png(filename = filePath, width = 480, height = 480, units = "px")
-    hist(data$Global_active_power, col="red", main="Global Active Power", xlab="Global Active Power (kilowatts)")
+    plot(x, y1, type="l", xlab="", ylab="Energy sub metering")
+    lines(x, y2, col="red")
+    lines(x, y3, col="green")
+    legend("topright", 
+           legend=c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), 
+           lwd=2, col=c("black", "red", "blue"))
     dev.off()
 }
 
 # This is the main function that needs to be called in order to do the complete 
-# data processing as well as plotting the histogram for the Global Active Power 
+# data processing as well as plotting the line graph for the Sub-Metering readings 
 # over the period of 2 days (2007-02-01 and 2007-02-02)
 init <- function() {
     data <- preProcessAndGetData()
-    drawAndSavePlot(data, "plot1.png")
+    drawAndSavePlot(data, "plot3.png")
 }
